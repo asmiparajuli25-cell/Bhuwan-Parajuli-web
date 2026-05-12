@@ -1,0 +1,71 @@
+{
+  "entities": {
+    "Post": {
+      "title": "Post",
+      "description": "A media post",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique ID" },
+        "type": { "type": "string", "enum": ["photo", "video", "audio", "status", "product"] },
+        "title": { "type": "string", "description": "Optional title" },
+        "text": { "type": "string", "description": "Optional text/description" },
+        "price": { "type": "string", "description": "Optional price" },
+        "url": { "type": "string", "description": "Download URL of the media" },
+        "createdAt": { "type": "number" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "type", "createdAt", "userId"]
+    },
+    "MarketplaceProduct": {
+      "title": "MarketplaceProduct",
+      "description": "A marketplace product",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "condition": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "sellerId": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "location": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["id", "title", "price", "sellerId", "sellerName", "createdAt", "category", "condition", "imageUrl"]
+    },
+    "MarketplaceOrder": {
+      "title": "MarketplaceOrder",
+      "description": "An order for a marketplace product",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "productTitle": { "type": "string" },
+        "price": { "type": "number" },
+        "buyerId": { "type": "string" },
+        "buyerName": { "type": "string" },
+        "buyerPhone": { "type": "string" },
+        "shippingAddress": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["id", "productId", "productTitle", "price", "buyerName", "buyerPhone", "shippingAddress", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/posts/{postId}": {
+      "schema": { "$ref": "#/entities/Post" },
+      "description": "All posts"
+    },
+    "/marketplace_products/{productId}": {
+      "schema": { "$ref": "#/entities/MarketplaceProduct" },
+      "description": "All marketplace products"
+    },
+    "/marketplace_orders/{orderId}": {
+      "schema": { "$ref": "#/entities/MarketplaceOrder" },
+      "description": "All marketplace orders"
+    }
+  }
+}

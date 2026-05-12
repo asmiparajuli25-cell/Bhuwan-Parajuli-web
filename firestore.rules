@@ -1,0 +1,112 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+
+    function isValidPost(data) {
+      // Use standard check for exact types
+      let hasRequired = data.keys().hasAll(['id', 'type', 'createdAt', 'userId']);
+      let sizeValid = data.keys().size() >= 4 && data.keys().size() <= 8;
+      
+      let idValid = data.id is string && data.id.size() <= 128;
+      let typeValid = data.type == 'photo' || data.type == 'video' || data.type == 'audio' || data.type == 'status' || data.type == 'product';
+      let timeValid = data.createdAt is number;
+      let userValid = data.userId is string && data.userId == request.auth.uid;
+      
+      let titleValid = !('title' in data) || (data.title is string && data.title.size() <= 200);
+      let textValid = !('text' in data) || (data.text is string && data.text.size() <= 2000);
+      let priceValid = !('price' in data) || (data.price is string && data.price.size() <= 50);
+      let urlValid = !('url' in data) || (data.url is string && data.url.size() <= 1500000);
+
+      return hasRequired && sizeValid && idValid && typeValid && timeValid && userValid && titleValid && textValid && priceValid && urlValid;
+    }
+
+    function isValidMarketplaceProduct(data) {
+      let isBasicValid = data.keys().hasAll(['id', 'title', 'price', 'sellerId', 'sellerName', 'createdAt', 'category', 'condition', 'imageUrl']) && data.keys().size() >= 9 && data.keys().size() <= 11;
+      let isStringsValid = data.id is string && data.id.size() <= 128 && data.title is string && data.title.size() <= 250 && data.category is string && data.category.size() <= 100 && data.condition is string && data.condition.size() <= 50;
+      let isSellerValid = data.sellerId is string && data.sellerId == request.auth.uid && data.sellerName is string && data.sellerName.size() <= 100;
+      let isNumbersUrlValid = data.price is number && data.createdAt is number && data.imageUrl is string && data.imageUrl.size() <= 1500000;
+      let isOptionalValid = (!('location' in data) || (data.location is string && data.location.size() <= 250)) && (!('description' in data) || (data.description is string && data.description.size() <= 5000));
+
+      return isBasicValid && isStringsValid && isSellerValid && isNumbersUrlValid && isOptionalValid;
+    }
+
+    match /marketplace_products/{productId} {
+      allow read: if true;
+      allow create: if isSignedIn()
+                    && isValidId(productId)
+                    && incoming().id == productId
+                    && isValidMarketplaceProduct(incoming());
+                    
+      allow update: if isSignedIn()
+                    && existing().sellerId == request.auth.uid
+                    && isValidMarketplaceProduct(incoming())
+                    && incoming().id == existing().id
+                    && incoming().sellerId == existing().sellerId
+                    && incoming().createdAt == existing().createdAt
+                    && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'price', 'condition', 'category', 'imageUrl', 'location']);
+
+      allow delete: if isSignedIn()
+                    && existing().sellerId == request.auth.uid;
+    }
+
+    function isValidMarketplaceOrder(data) {
+      let isBasicValid = data.keys().hasAll(['id', 'productId', 'productTitle', 'price', 'buyerName', 'buyerPhone', 'shippingAddress', 'status', 'createdAt']) && data.keys().size() >= 9 && data.keys().size() <= 10;
+      let isStringsValid = data.id is string && data.id.size() <= 128 && data.productId is string && data.productId.size() <= 128 && data.productTitle is string && data.productTitle.size() <= 250;
+      let isBuyerInfoValid = data.buyerName is string && data.buyerName.size() <= 100 && data.buyerPhone is string && data.buyerPhone.size() <= 50 && data.shippingAddress is string && data.shippingAddress.size() <= 1000;
+      let isStatusNumbersValid = data.status in ['pending', 'completed', 'cancelled'] && data.price is number && data.createdAt is number;
+      let isUserIdValid = !('buyerId' in data) || (data.buyerId is string && data.buyerId.size() <= 128);
+
+      return isBasicValid && isStringsValid && isBuyerInfoValid && isStatusNumbersValid && isUserIdValid;
+    }
+
+    match /marketplace_orders/{orderId} {
+      allow read: if isSignedIn() && (!('buyerId' in resource.data) || resource.data.buyerId == request.auth.uid || exists(/databases/$(database)/documents/marketplace_products/$(resource.data.productId)) && get(/databases/$(database)/documents/marketplace_products/$(resource.data.productId)).data.sellerId == request.auth.uid);
+      allow create: if isValidId(orderId)
+                    && incoming().id == orderId
+                    && isValidMarketplaceOrder(incoming())
+                    && incoming().status == 'pending'
+                    && (!('buyerId' in incoming()) || incoming().buyerId == request.auth.uid);
+
+      allow update: if isSignedIn()
+                    && existing().status == 'pending'
+                    && isValidMarketplaceOrder(incoming())
+                    && incoming().id == existing().id
+                    && incoming().productId == existing().productId
+                    && incoming().price == existing().price
+                    && incoming().createdAt == existing().createdAt
+                    && incoming().diff(existing()).affectedKeys().hasOnly(['status']);
+      allow delete: if false;
+    }
+
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if isSignedIn() 
+                    && isValidId(postId) 
+                    && incoming().id == postId
+                    && isValidPost(incoming());
+                    
+      allow update: if isSignedIn() 
+                    && existing().userId == request.auth.uid
+                    && isValidPost(incoming())
+                    && incoming().id == existing().id
+                    && incoming().userId == existing().userId
+                    && incoming().createdAt == existing().createdAt
+                    && incoming().type == existing().type
+                    && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'text', 'price']);
+
+      allow delete: if isSignedIn() 
+                    && existing().userId == request.auth.uid;
+    }
+  }
+}

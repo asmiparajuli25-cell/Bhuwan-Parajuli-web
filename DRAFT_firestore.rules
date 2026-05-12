@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+
+    function isValidPost(data) {
+      let allowedKeys = ['id', 'type', 'createdAt', 'userId', 'title', 'text', 'price', 'url'];
+      let hasRequired = data.keys().hasAll(['id', 'type', 'createdAt', 'userId']);
+      // using keys() is a List, so hasOnly is not allowed for Lists, we use affectedKeys().hasOnly() during updates.
+      // For create exact size, we do not know if optional fields are present. Instead, we can't easily check extra keys unless we know exact sizes. 
+      // Actually we can just check if size is between 4 and 8.
+      let sizeValid = data.keys().size() >= 4 && data.keys().size() <= 8;
+      
+      let idValid = data.id is string && data.id.size() <= 128;
+      let typeValid = data.type in ['photo', 'video', 'audio', 'status', 'product'];
+      let timeValid = data.createdAt is number;
+      let userValid = data.userId is string && data.userId == request.auth.uid;
+      
+      let titleValid = !('title' in data) || (data.title is string && data.title.size() <= 200);
+      let textValid = !('text' in data) || (data.text is string && data.text.size() <= 2000);
+      let priceValid = !('price' in data) || (data.price is string && data.price.size() <= 50);
+      let urlValid = !('url' in data) || (data.url is string && data.url.size() <= 1500000);
+
+      return hasRequired && sizeValid && idValid && typeValid && timeValid && userValid && titleValid && textValid && priceValid && urlValid;
+    }
+
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if isSignedIn() 
+                    && isValidId(postId) 
+                    && incoming().id == postId
+                    // Enforce timestamp is approx current, but it's set by Date.now() on client, so request.time is better but Date.now() is number. We will just check if it's a number for Date.now().
+                    && isValidPost(incoming());
+                    
+      allow update: if isSignedIn() 
+                    && existing().userId == request.auth.uid
+                    && isValidPost(incoming())
+                    && incoming().id == existing().id
+                    && incoming().userId == existing().userId
+                    && incoming().createdAt == existing().createdAt
+                    && incoming().type == existing().type
+                    && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'text', 'price']);
+
+      allow delete: if isSignedIn() 
+                    && existing().userId == request.auth.uid;
+    }
+  }
+}

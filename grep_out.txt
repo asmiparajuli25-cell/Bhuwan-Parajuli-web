@@ -1,0 +1,105 @@
+    <div className="min-h-screen bg-[#EAEBED] font-sans text-[#006989]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => scrollToSection('hero')}>
+                <div className="rounded-[10px] overflow-hidden bg-[#FFD700] flex items-center justify-center">
+            <div className="hidden md:flex space-x-2 lg:space-x-4 items-center">
+                  <div
+                  <div className={`absolute inset-[2px] bg-[#014421] rounded-full z-0 transition-opacity duration-300 ${activeNav === item.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></div>
+                  <div className={`relative z-10 flex items-center gap-2 ${activeNav === item.id ? 'px-3 py-1.5' : 'px-3 py-1.5 group-hover:px-3 group-hover:py-1.5'}`}>
+              <div className="w-px h-6 bg-[#F7B538]/30 mx-2"></div>
+                <div
+                <div className={`absolute inset-[2px] bg-[#014421] rounded-full z-0 transition-opacity duration-300 ${activeNav === 'theme' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></div>
+                <div className={`relative z-10 flex items-center gap-2 ${activeNav === 'theme' ? 'px-3 py-1.5' : 'px-3 py-1.5 group-hover:px-3 group-hover:py-1.5'}`}>
+                <div
+                <div className={`absolute inset-[2px] bg-[#014421] rounded-full z-0 transition-opacity duration-300 ${activeNav === 'refresh' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></div>
+                <div className={`relative z-10 flex items-center gap-2 ${activeNav === 'refresh' ? 'px-3 py-1.5' : 'px-3 py-1.5 group-hover:px-3 group-hover:py-1.5'}`}>
+            <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden border-b border-[#F7B538]/20" style={{ backgroundColor: '#014421' }}>
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div 
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-24 relative z-10">
+            <div className="max-w-3xl">
+                <div className="flex items-center gap-6 mb-8">
+                  <div 
+                    <div className="bg-white px-5 py-3 rounded-[10px] h-full w-full flex items-center min-h-[44px]">
+                  <div
+                <div className="flex flex-wrap gap-4 items-center">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl">
+              <div className="prose prose-lg text-[#006989]">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className={`p-3 rounded-lg ${
+                  <div className="w-full bg-slate-200 rounded-full h-2.5">
+                    <div 
+          <div className="absolute inset-0 bg-[#EAEBED]/85 backdrop-blur-sm"></div>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+              <div>
+                <div className="flex items-center gap-3 mb-8">
+                <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                  <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-emerald-500 text-slate-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-200 bg-white shadow-sm">
+                      <div className="flex items-center justify-between mb-1">
+                      <div className="text-sm text-blue-600 font-medium mb-2">IMS Group</div>
+                      <div className="text-sm text-slate-500">2022 - 2024</div>
+                  <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-200 bg-white shadow-sm">
+                      <div className="flex items-center justify-between mb-1">
+                      <div className="text-sm text-blue-600 font-medium mb-2">Harati IT Solution</div>
+                      <div className="text-sm text-slate-500">2021 - 2022</div>
+              <div id="education">
+                <div className="flex items-center gap-3 mb-8">
+                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-12">
+                  <div className="text-blue-600 font-medium mb-3">Softwarica IT College</div>
+                  <div className="flex items-center text-slate-500 text-sm gap-2 mb-4">
+                  <div className="inline-block px-3 py-1 bg-slate-100 text-[#006989] text-sm font-medium rounded-full">
+                <div className="flex items-center gap-3 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div key={lang.name} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col items-start text-left hover:shadow-md transition-shadow group">
+                      <div className="flex justify-between items-center w-full mb-2">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div key={project.id} className="group rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl transition-all duration-300 flex flex-col">
+                  <div className="aspect-video bg-slate-100 relative overflow-hidden">
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex flex-wrap gap-2 mb-4">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="text-emerald-500 mb-6">
+                  <div className="flex items-center gap-4">
+                    <div>
+          <div 
+          <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#EAEBED] via-[#EAEBED]/90 to-[#EAEBED]/95"></div>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+              <div className="flex flex-col items-center justify-center text-center">
+                <div>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-blue-600/10 text-blue-600 rounded-lg shrink-0">
+                    <div>
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-blue-600/10 text-blue-600 rounded-lg shrink-0">
+                    <div>
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-blue-600/10 text-blue-600 rounded-lg shrink-0">
+                    <div>
+              <div className="bg-white p-8 rounded-2xl border border-blue-100 shadow-lg shadow-blue-900/5">
+                  <div>
+                  <div>
+                  <div>
+                  <div className="flex flex-col sm:flex-row gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex gap-4">
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">
+          <div className="flex flex-col gap-3 items-end mb-2 pointer-events-auto">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeWidget === 'weather' ? 'bg-[#014421] text-[#FFD700] shadow-lg shadow-[#014421]/30' : 'bg-[#014421]/90 text-[#FFD700]'}`}>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeWidget === 'calc' ? 'bg-[#014421] text-[#FFD700] shadow-lg shadow-[#014421]/30' : 'bg-[#014421]/90 text-[#FFD700]'}`}>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeWidget === 'currency' ? 'bg-[#014421] text-[#FFD700] shadow-lg shadow-[#014421]/30' : 'bg-[#014421]/90 text-[#FFD700]'}`}>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeWidget === 'nepal' ? 'bg-[#014421] text-[#FFD700] shadow-lg shadow-[#014421]/30' : 'bg-[#014421]/90 text-[#FFD700]'}`}>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${activeWidget === 'market' ? 'bg-[#014421] text-[#FFD700] shadow-lg shadow-[#014421]/30' : 'bg-[#014421]/90 text-[#FFD700]'}`}>

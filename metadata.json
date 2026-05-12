@@ -1,0 +1,5 @@
+{
+  "name": "Bhuwan Parajuli Portfolio",
+  "description": "A modern, single-page portfolio for Bhuwan Parajuli, Software Developer.",
+  "requestFramePermissions": ["microphone"]
+}
