@@ -44,7 +44,44 @@ export default function MarketplaceModal({ isOpen, onClose }: { isOpen: boolean;
       snapshot.forEach(doc => {
         fetchedProducts.push({ id: doc.id, ...doc.data() } as Product);
       });
-      setProducts(fetchedProducts);
+      
+      const defaultProducts: Product[] = [
+        {
+          id: 'mock-1',
+          title: 'Vintage Leather Jacket',
+          description: 'Genuine leather, size M. Great condition!',
+          price: 1500,
+          condition: 'Used',
+          category: 'Fashion',
+          imageUrl: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&q=80',
+          sellerId: 'admin',
+          sellerName: 'BiN_Store',
+          location: 'Kathmandu',
+          createdAt: 0,
+        },
+        {
+          id: 'mock-2',
+          title: 'iPhone 13 Pro',
+          description: '128GB, Sierra Blue. Includes box and charger.',
+          price: 85000,
+          condition: 'Like New',
+          category: 'Electronics',
+          imageUrl: 'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=500&q=80',
+          sellerId: 'admin',
+          sellerName: 'BiN_Store',
+          location: 'Pokhara',
+          createdAt: 0,
+        }
+      ];
+
+      const allProducts = [...fetchedProducts];
+      defaultProducts.forEach(dp => {
+        if (!allProducts.some(p => p.id === dp.id)) {
+          allProducts.push(dp);
+        }
+      });
+
+      setProducts(allProducts);
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'marketplace_products');
     });
@@ -133,12 +170,14 @@ export default function MarketplaceModal({ isOpen, onClose }: { isOpen: boolean;
 
     try {
       await setDoc(doc(db, 'marketplace_products', productId), product);
+      console.log('Product listed successfully:', product);
       alert("Product listed successfully!");
       setActiveTab('browse');
       setNewProduct({
         title: '', description: '', priceString: '', condition: 'New', category: 'Electronics', imageUrl: '', location: ''
       });
     } catch (error) {
+       console.error("🔥 Error listing product:", error);
        handleFirestoreError(error, OperationType.CREATE, 'marketplace_products');
     }
   };
@@ -243,22 +282,18 @@ export default function MarketplaceModal({ isOpen, onClose }: { isOpen: boolean;
               >
                 Browse Items
               </button>
-              {isOwner && (
-                <>
-                  <button
-                    onClick={() => setActiveTab('sell')}
-                    className={`flex-1 py-4 px-4 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'sell' ? 'text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
-                  >
-                    Sell an Item
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('my-listings')}
-                    className={`flex-1 py-4 px-4 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'my-listings' ? 'text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
-                  >
-                    My Listings
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() => setActiveTab('sell')}
+                className={`flex-1 py-4 px-4 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'sell' ? 'text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
+              >
+                Sell an Item
+              </button>
+              <button
+                onClick={() => setActiveTab('my-listings')}
+                className={`flex-1 py-4 px-4 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'my-listings' ? 'text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
+              >
+                My Listings
+              </button>
               <button
                 onClick={() => setActiveTab('favorites')}
                 className={`flex-1 py-4 px-4 text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'favorites' ? 'text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50/50' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}

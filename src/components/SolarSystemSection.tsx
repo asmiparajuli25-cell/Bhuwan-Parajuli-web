@@ -4,7 +4,7 @@ import { Info, X, Globe, Orbit, Clock, Cloud, Layers, Activity, Languages } from
 import { planetsData, translations, Language } from './solarSystemData';
 
 
-import WorldWeatherInline from './WorldWeatherInline';
+
 
 export default function SolarSystemSection() {
   const [lang, setLang] = useState<Language>('en');
@@ -91,10 +91,7 @@ export default function SolarSystemSection() {
           </motion.p>
         </div>
 
-        {/* Global Weather Highlights */}
-        <div className="mb-16">
-          <WorldWeatherInline />
-        </div>
+
 
             {/* Animated Solar System Overview view */}
         <div className="relative w-full max-w-3xl mx-auto h-64 sm:h-80 md:h-96 mb-12 flex items-center justify-center -mt-6">
@@ -167,19 +164,52 @@ export default function SolarSystemSection() {
                       >
                         {/* Add Saturn's ring */}
                         {planet.en.name === 'Saturn' && (
-                          <div className="absolute w-[180%] h-[30%] -rotate-12 rounded-[50%] border border-yellow-200/50" />
+                          <div className="absolute w-[180%] h-[30%] -rotate-12 rounded-[50%] border border-yellow-200/50 z-0" />
                         )}
-                        {/* Add Earth's Moon */}
-                        {planet.en.name === 'Earth' && (
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                            style={{ width: 14, height: 14 }}
-                            className="absolute rounded-full border-white/30 border-dotted will-change-transform"
-                          >
-                             <div className="absolute top-0 right-0 w-0.5 h-0.5 bg-slate-200 rounded-full" />
-                          </motion.div>
-                        )}
+                        {/* Render all moons for the planet */}
+                        {(() => {
+                          const numMoons = parseInt(planet.en.moons.split(' ')[0], 10);
+                          if (isNaN(numMoons) || numMoons <= 0) return null;
+                          
+                          // Determine base orbit padding based on planet size
+                          const sizeClass = planetSizes[planet.en.name] || 'w-2';
+                          let basePlanetSize = 10;
+                          if (sizeClass.includes('w-6')) basePlanetSize = 24;
+                          else if (sizeClass.includes('w-5')) basePlanetSize = 20;
+                          else if (sizeClass.includes('w-4')) basePlanetSize = 16;
+                          else if (sizeClass.includes('w-3.5')) basePlanetSize = 14;
+                          else if (sizeClass.includes('w-3')) basePlanetSize = 12;
+
+                          return Array.from({ length: numMoons }).map((_, i) => {
+                            // Spread out orbits and variations predictably based on index
+                            const orbitSize = basePlanetSize + 4 + (i % 20) * 1.5 + (Math.floor(i / 20) * 3);
+                            // Vary the duration, some slow, some fast
+                            // Inner moons faster, outer moons slower
+                            const duration = 2.5 + (i % 12) * 0.5 + (Math.floor(i / 10) * 0.2);
+                            // Golden ratio angle to distribute them perfectly around the planet
+                            const startAngle = (i * 137.5) % 360; 
+                            const isDotted = i % 3 === 0;
+
+                            return (
+                              <motion.div
+                                key={`moon-${planet.en.name}-${i}`}
+                                animate={{ rotate: [startAngle, startAngle + 360] }}
+                                transition={{ duration: duration, repeat: Infinity, ease: "linear" }}
+                                style={{ width: orbitSize, height: orbitSize }}
+                                className={`absolute rounded-full border-white/10 ${isDotted ? 'border-dotted' : ''} will-change-transform pointer-events-none z-10`}
+                              >
+                                <div 
+                                  className="absolute w-[1px] h-[1px] md:w-[1.5px] md:h-[1.5px] bg-slate-200 rounded-full shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+                                  style={{ 
+                                    top: -1, 
+                                    left: '50%',
+                                    transform: 'translateX(-50%)'
+                                  }}
+                                />
+                              </motion.div>
+                            );
+                          });
+                        })()}
                       </div>
                     </div>
                   </motion.div>
